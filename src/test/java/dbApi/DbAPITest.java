@@ -23,9 +23,7 @@ public class DbAPITest extends BaseTest {
     /**
      * Test fetching all employees' data from db and compare the count
      * of employees to expected result
-     *
      * @param expectedEmployeesNumber from dbApiTest.xml file
-     *                                If you want this test run successfully: remove  "**********" in last line
      * @numberOfEmployees + status + message
      */
     @Test(description = "Get all Employees Data")
@@ -44,7 +42,7 @@ public class DbAPITest extends BaseTest {
         //Another way to assert the results :
         Assert.assertEquals(response.getMessage(), "Successfully! All records has been fetched.");
         Assert.assertEquals(response.getData().size(), numOfEmployees);
-        Assert.assertEquals(response.getStatus(), "success **********");//I did this mistake deliberately to show failed test in Report
+        Assert.assertEquals(response.getStatus(), "success");
     }
 
 
@@ -80,7 +78,7 @@ public class DbAPITest extends BaseTest {
      * Test create new employee in db by given json file
      * and compare the actual results to expected
      */
-    @Test(description = "Create new Employee")
+    @Test(description = "Create new Employee",retryAnalyzer = Retry.class)
     public void createNewEmployee() {
         JSONObject requestNewEmployee = JsonConvertor.getJSONObject("newEmployee.json");
         String endPoint = "/create";
@@ -92,6 +90,9 @@ public class DbAPITest extends BaseTest {
 
         Assert.assertEquals(responseNewEmployee.getMessage(), "Successfully! Record has been added.");
         Assert.assertEquals(responseNewEmployee.getStatus(), "success");
+        Assert.assertEquals(responseNewEmployee.getData().getEmployee_salary(), requestNewEmployee.get("salary"));
+        Assert.assertEquals(responseNewEmployee.getData().getEmployee_age(), requestNewEmployee.get("age"));
+        Assert.assertEquals(responseNewEmployee.getData().getEmployee_name(), requestNewEmployee.get("name"));
         Log.info("NEW EMPLOYEE ID IS: " + responseNewEmployee.getData().getId());
     }
 
@@ -115,7 +116,7 @@ public class DbAPITest extends BaseTest {
      *
      * @param id
      */
-    @Test(description = "Delete Employee by given ID", retryAnalyzer = Retry.class)
+    @Test(description = "Delete Employee by given ID")
     @Parameters("id")
     public void deleteEmployeeById(String id) {
         String endPoint = "/delete";
