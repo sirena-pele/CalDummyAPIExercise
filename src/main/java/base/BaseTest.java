@@ -1,6 +1,5 @@
 package base;
 
-
 import constant.IConfigKeys;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
@@ -10,7 +9,6 @@ import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeTest;
 import utilities.ConfigLoader;
 
 public class BaseTest {
@@ -19,18 +17,11 @@ public class BaseTest {
     protected RequestSpecification requestSpecification;
     protected ResponseSpecification responseSpecification;
 
-
-    @BeforeTest
-    public void config() {
-
-    }
-
     @BeforeSuite
-    public void beforeSuite() {
+    public void config() {
         baseURI = ConfigLoader.getInstance().getProperties().getProperty(IConfigKeys.BASE_URI);
         basePath = ConfigLoader.getInstance().getProperties().getProperty(IConfigKeys.BASE_PATH);
     }
-
     @BeforeClass()
     public void beforeClass() {
         RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder().
@@ -45,5 +36,4 @@ public class BaseTest {
                 .log(LogDetail.ALL);
         responseSpecification = responseSpecBuilder.build();
     }
-
 }
