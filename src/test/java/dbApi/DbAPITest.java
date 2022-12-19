@@ -23,10 +23,16 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 public class DbAPITest extends BaseTest {
 
+    /**
+     * Test fetching all employees' data from db and compare the count
+     * of employees to expected result
+     * @numberOfEmployees + status + message
+     * @param expectedEmployeesNumber from dbApiTest.xml file
+     * If you want this test run successfully: remove  "**********" in last line
+     */
     @Test(description = "Get all Employees Data")
     @Parameters("numberOfEmployees")
     public void getAllEmployeesData(String expectedEmployeesNumber) {
-        // Test fetching all employees data from db and compare the count of employees to expected result numberOfEmployees + status + message
         String endPoint = "/employees";
         int numOfEmployees = Integer.parseInt(expectedEmployeesNumber);
         EmployeeListSuccessResponse response = given(requestSpecification)
@@ -44,10 +50,15 @@ public class DbAPITest extends BaseTest {
         Assert.assertEquals("success **********", response.getStatus());//I did this mistake deliberately to show failed test in Report
     }
 
+
+    /**
+     * For given id test take data from employees.json file and compare every param to actual result from a response
+     * @param id from dbApiTest.xml file
+     */
     @Test(description = "Get single employee by ID", retryAnalyzer = Retry.class)
     @Parameters("id")
     public void getEmployeeById(String id) throws IOException {
-        //for given id test take json data from employees.json file and compare it to actual result from a response
+        //
         int intId = Integer.parseInt(id);
         String endPoint = "/employee";
         Data requestEmployee = new Data(intId);
@@ -67,10 +78,12 @@ public class DbAPITest extends BaseTest {
 
     }
 
-
+    /**
+     * Test create new employee in db by given json file
+     * and compare the actual results to expected
+     */
     @Test(description = "Create new Employee")
     public void createNewEmployee() {
-        //Test create new employee in db by given json file and compare the actual results to expected
         JSONObject requestNewEmployee = JsonConvertor.getJSONObject("newEmployee.json");
         String endPoint = "/create";
         EmployeeSuccessResponse responseNewEmployee =
@@ -84,10 +97,13 @@ public class DbAPITest extends BaseTest {
         Log.info("NEW EMPLOYEE ID IS: " + responseNewEmployee.getData().getId());
     }
 
+    /**
+     * Test update existing employee in db and compare the actual results
+     * to expected response status
+     */
     @Test(description = "Update Employee data by given ID")
     @Parameters("id")
     public void updateEmployeeById(String id) {
-        //Test update existing employee in db and compare the actual results to expected
         File file = new File("src/test/resources/updateEmployee.json");
         String endPoint = "/update";
         given(requestSpecification).body(file)
@@ -96,7 +112,10 @@ public class DbAPITest extends BaseTest {
                 .body("status", equalTo("success"), "message", equalTo("Successfully! Record has been updated."));
     }
 
-
+    /**
+     * Test delete employee from db by given
+     * @param id
+     */
     @Test(description = "Delete Employee by given ID", retryAnalyzer = Retry.class)
     @Parameters("id")
     public void deleteEmployeeById(String id) {
