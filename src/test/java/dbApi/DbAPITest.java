@@ -2,11 +2,8 @@ package dbApi;
 
 import base.BaseTest;
 import base.Retry;
-import com.aventstack.extentreports.ExtentTest;
 import org.json.JSONObject;
 import org.testng.Assert;
-import org.testng.ITestContext;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pojo.Data;
@@ -26,9 +23,10 @@ public class DbAPITest extends BaseTest {
     /**
      * Test fetching all employees' data from db and compare the count
      * of employees to expected result
-     * @numberOfEmployees + status + message
+     *
      * @param expectedEmployeesNumber from dbApiTest.xml file
-     * If you want this test run successfully: remove  "**********" in last line
+     *                                If you want this test run successfully: remove  "**********" in last line
+     * @numberOfEmployees + status + message
      */
     @Test(description = "Get all Employees Data")
     @Parameters("numberOfEmployees")
@@ -44,15 +42,15 @@ public class DbAPITest extends BaseTest {
                 .extract().body().as(EmployeeListSuccessResponse.class);
 
         //Another way to assert the results :
-        Assert.assertEquals("Successfully! All records has been fetched.", response.getMessage());
-        Assert.assertEquals(numOfEmployees, response.getData().size());
-
-        Assert.assertEquals("success **********", response.getStatus());//I did this mistake deliberately to show failed test in Report
+        Assert.assertEquals(response.getMessage(), "Successfully! All records has been fetched.");
+        Assert.assertEquals(response.getData().size(), numOfEmployees);
+        Assert.assertEquals(response.getStatus(), "success **********");//I did this mistake deliberately to show failed test in Report
     }
 
 
     /**
      * For given id test take data from employees.json file and compare every param to actual result from a response
+     *
      * @param id from dbApiTest.xml file
      */
     @Test(description = "Get single employee by ID", retryAnalyzer = Retry.class)
@@ -70,11 +68,11 @@ public class DbAPITest extends BaseTest {
                                 "status", equalTo("success"))
                         .extract().body().as(EmployeeSuccessResponse.class);
 
-        Assert.assertEquals(requestEmployee.getId(), responseEmployee.getData().getId());
-        Assert.assertEquals(requestEmployee.getEmployee_salary(), responseEmployee.getData().getEmployee_salary());
-        Assert.assertEquals(requestEmployee.getEmployee_age(), responseEmployee.getData().getEmployee_age());
-        Assert.assertEquals(requestEmployee.getEmployee_name(), responseEmployee.getData().getEmployee_name());
-        Assert.assertEquals(requestEmployee.getProfile_image(), responseEmployee.getData().getProfile_image());
+        Assert.assertEquals(responseEmployee.getData().getId(), requestEmployee.getId());
+        Assert.assertEquals(responseEmployee.getData().getEmployee_salary(), requestEmployee.getEmployee_salary());
+        Assert.assertEquals(responseEmployee.getData().getEmployee_age(), requestEmployee.getEmployee_age());
+        Assert.assertEquals(responseEmployee.getData().getEmployee_name(), requestEmployee.getEmployee_name());
+        Assert.assertEquals(responseEmployee.getData().getProfile_image(), requestEmployee.getProfile_image());
 
     }
 
@@ -114,6 +112,7 @@ public class DbAPITest extends BaseTest {
 
     /**
      * Test delete employee from db by given
+     *
      * @param id
      */
     @Test(description = "Delete Employee by given ID", retryAnalyzer = Retry.class)
